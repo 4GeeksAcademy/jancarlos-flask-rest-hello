@@ -8,7 +8,7 @@ from flask_swagger import swagger
 from flask_cors import CORS
 from utils import APIException, generate_sitemap
 from admin import setup_admin
-from models import db, User, people, Planets, vehicle, Favorites 
+from models import db, User, People, Planets, Vehicle, Favorites 
 import json
 #from models import Person
 
@@ -89,7 +89,7 @@ def delete_one_user(user_id):
 
 @app.route('/people', methods=['GET'])
 def get_all_peoples():
-    peoples = people.query.all()
+    peoples = People.query.all()
     if len(peoples) < 1:
         return jsonify({"msg": "not found"}), 404
     serialized_peoples = list(map(lambda x: x.serialize(), peoples))
@@ -97,7 +97,7 @@ def get_all_peoples():
 
 @app.route('/people/<int:people_id>', methods=['GET'])
 def get_one_people(people_id):
-    people = people.query.get(people_id)
+    people = People.query.get(people_id)
     if people is None:
         return jsonify({"msg": f"user with id {people_id} not found"}), 404
     serialized_people = people.serialize()
@@ -106,7 +106,7 @@ def get_one_people(people_id):
 @app.route('/people', methods=['POST'])
 def create_one_people():
     body = json.loads(request.data)
-    new_people = people(
+    new_people = People(
         name = body["name"],
         eye_color = body["eye_color"],
         hair_color = body["hair_color"]
@@ -118,7 +118,7 @@ def create_one_people():
 @app.route('/people/<int:people_id>', methods=['PUT'])
 def edit_one_people(people_id):
     body = json.loads(request.data)
-    people = people.query.get(people_id)
+    people = People.query.get(people_id)
     if people is None:
         return jsonify({"msg": f"people with id {people_id} not found"}), 404
     for key, value in body.items(): 
@@ -129,7 +129,7 @@ def edit_one_people(people_id):
 
 @app.route('/people/<int:people_id>', methods=['DELETE'])
 def delete_one_people(people_id):
-    people = people.query.get(people_id)
+    people = People.query.get(people_id)
     if people is None:
         return jsonify({"msg": f"people with id {people_id} not found"}), 404
     db.session.delete(people)
@@ -189,7 +189,7 @@ def delete_one_planet(planet_id):
 
 @app.route('/vehicle', methods=['GET'])
 def get_all_vehicle():
-    vehicle = vehicle.query.all()
+    vehicle = Vehicle.query.all()
     if len(vehicle) < 1:
         return jsonify({"msg": "not found"}), 404
     serialized_vehicle = list(map(lambda x: x.serialize(), vehicle))
@@ -197,7 +197,7 @@ def get_all_vehicle():
 
 @app.route('/vehicle/<int:vehicle_id>', methods=['GET'])
 def get_one_vehicle(vehicle_id):
-    vehicle = vehicle.query.get(vehicle_id)
+    vehicle = Vehicle.query.get(vehicle_id)
     if vehicle is None:
         return jsonify({"msg": f"user with id {vehicle_id} not found"}), 404
     serialized_vehicle = vehicle.serialize()
@@ -206,7 +206,7 @@ def get_one_vehicle(vehicle_id):
 @app.route('/vehicle', methods=['POST'])
 def create_one_vehicle():
     body = json.loads(request.data)
-    new_vehicle = vehicle(
+    new_vehicle = Vehicle(
         name = body["name"],
         created  = body["created"],
         producer = body["producer"],
@@ -219,7 +219,7 @@ def create_one_vehicle():
 @app.route('/vehicle/<int:vehicle_id>', methods=['PUT'])
 def edit_one_vehicle(vehicle_id):
     body = json.loads(request.data)
-    vehicle = vehicle.query.get(vehicle_id)
+    vehicle = Vehicle.query.get(vehicle_id)
     if vehicle is None:
         return jsonify({"msg": f"vehicle with id {vehicle_id} not found"}), 404
     for key, value in body.items(): 
@@ -230,7 +230,7 @@ def edit_one_vehicle(vehicle_id):
 
 @app.route('/vehicle/<int:vehicle_id>', methods=['DELETE'])
 def delete_one_vehicle(vehicle_id):
-    vehicle = vehicle.query.get(vehicle_id)
+    vehicle = Vehicle.query.get(vehicle_id)
     if vehicle is None:
         return jsonify({"msg": f"vehicle with id {vehicle_id} not found"}), 404
     db.session.delete(vehicle)
